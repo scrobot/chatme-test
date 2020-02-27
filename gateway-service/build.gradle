@@ -1,0 +1,17 @@
+apply plugin: "org.springframework.boot"
+
+dependencies {
+
+}
+
+bootJar {
+    dependsOn jar
+    archiveName = 'gateway.jar'
+    manifest {
+        attributes(
+                'Implementation-Title': 'test gateway service',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'Chat.me',
+        )
+    }
+}

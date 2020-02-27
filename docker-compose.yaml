@@ -1,0 +1,82 @@
+version: '3.6'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - back-tier
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8001:8080
+    networks:
+      - back-tier
+
+  redis:
+    image: 'bitnami/redis:latest'
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - back-tier
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
+  consul:
+    image: consul:latest
+    ports:
+      - 8400:8400
+      - 8500:8500
+      - 8600:8600
+    volumes:
+      - consult_data:/consul/config/config.json
+      - consult_data:/consul/data
+    networks:
+      - back-tier
+
+  vault:
+    image: vault
+    ports:
+      - 8200:8200
+    volumes:
+      - vault_data:/vault/config
+      - vault_data:/vault/policies
+      - vault_data:/vault/data
+      - vault_data:/vault/logs
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+    command: server -config=/vault/config/vault-config.json
+    cap_add:
+      - IPC_LOCK
+    depends_on:
+      - consul
+    networks:
+      - back-tier
+
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+  db_data: {}
+  consult_data: {}
+  vault_data: {}
+
+
+networks:
+  back-tier:
+

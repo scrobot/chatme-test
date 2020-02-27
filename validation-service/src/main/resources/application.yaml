@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: user
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: validate # Схему при подключении валидируем, но не изменяем
+  application:
+    name: validation-service
+    sleuth:
+      sampler:
+        probability: 1
+  cloud:
+    consul:
+      discovery:
+        prefer-ip-address: true
+        instanceId: ${spring.application.name}:${random.value}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 20s
+      host: 127.0.0.1
+      port: 8500
+  rsocket:
+    server:
+      port: 7000
