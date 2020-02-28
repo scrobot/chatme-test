@@ -1,7 +1,8 @@
 package me.chat.test.validation.controllers;
 
-import me.chat.common.models.ValidationTaskRequest;
-import me.chat.common.models.ValidationTaskResponse;
+import me.chat.protoapi.ValidationError;
+import me.chat.protoapi.ValidationTaskRequest;
+import me.chat.protoapi.ValidationTaskResponse;
 import me.chat.test.validation.services.ValidationService;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,6 +25,16 @@ public class ValidationController {
 
     @MessageExceptionHandler
     public Mono<ValidationTaskResponse> handleException(Exception e) {
-        return Mono.just(ValidationTaskResponse.fromException(e));
+        return Mono.just(
+            ValidationTaskResponse
+            .newBuilder()
+            .setError(
+                ValidationError
+                    .newBuilder()
+                    .setReason(e.getLocalizedMessage())
+                    .build()
+            )
+            .build()
+        );
     }
 }

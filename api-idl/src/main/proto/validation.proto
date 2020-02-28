@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package com.skblab.proto;
+import "google/protobuf/wrappers.proto";
+
+option java_package = "me.chat.protoapi";
+option java_multiple_files = true;
+
+message ValidationTaskRequest {
+    int64 id = 1;
+    string name = 2;
+}
+
+message ValidationTaskResponse {
+    int64 id = 1;
+    ValidationStatus status = 2;
+    ValidationError error = 3;
+}
+
+message ValidationError {
+    string reason = 1;
+}
+
+enum ValidationStatus {
+    PASSED = 0;
+    DECLINED = 1;
+}

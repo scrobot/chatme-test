@@ -1,8 +1,8 @@
 package me.chat.test.validation.services;
 
-import me.chat.common.models.ValidationStatus;
-import me.chat.common.models.ValidationTaskRequest;
-import me.chat.common.models.ValidationTaskResponse;
+import me.chat.protoapi.ValidationStatus;
+import me.chat.protoapi.ValidationTaskRequest;
+import me.chat.protoapi.ValidationTaskResponse;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -21,9 +21,11 @@ public class ValidationServiceImpl implements ValidationService {
             .map(it -> cache.get(it.getId()))
             .switchIfEmpty(
                 Mono.just(
-                    new ValidationTaskResponse()
-                    .setId(request.getId())
-                    .setStatus(request.getName().length() > 5 ? ValidationStatus.PASSED : ValidationStatus.DECLINED)
+                    ValidationTaskResponse
+                        .newBuilder()
+                        .setId(request.getId())
+                        .setStatus(request.getName().length() > 5 ? ValidationStatus.PASSED : ValidationStatus.DECLINED)
+                        .build()
                 )
             )
             .doOnSuccess(validationTaskResponse -> {

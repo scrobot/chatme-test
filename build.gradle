@@ -15,9 +15,10 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id "org.springframework.boot" version "2.2.4.RELEASE"
     id "io.spring.dependency-management" version "1.0.9.RELEASE"
     id "io.freefair.lombok" version "5.0.0-rc4"
+    id "org.springframework.boot" version "2.2.4.RELEASE" apply false
+    id 'com.google.protobuf' version '0.8.10' apply false
 }
 
 allprojects {
@@ -33,7 +34,7 @@ allprojects {
     apply plugin: 'io.freefair.lombok'
     apply plugin: 'io.spring.dependency-management'
 
-    group = 'me.chat.test.validation'
+    group = 'me.chat.test'
     version = '0.0.1-SNAPSHOT'
 
     sourceCompatibility = '11'
@@ -41,10 +42,12 @@ allprojects {
 
     ext {
         set('springCloudVersion', "Hoxton.SR1")
+        set('springBootVersion', "2.2.4.RELEASE")
     }
 
     dependencyManagement {
         imports {
+            mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
     }
@@ -54,6 +57,9 @@ allprojects {
     }
 
     dependencies {
+        runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+        runtimeOnly 'org.postgresql:postgresql:42.2.5'
+
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
@@ -64,22 +70,33 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
         implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
 
-        runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-        runtimeOnly 'org.postgresql:postgresql:42.2.5'
-
-        compileOnly 'org.projectlombok:lombok:1.18.12'
-        annotationProcessor 'org.projectlombok:lombok:1.18.12'
-
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
+
         testImplementation 'io.projectreactor:reactor-test'
         testImplementation 'com.h2database:h2'
         testImplementation 'org.flywaydb:flyway-core'
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
-        testCompileOnly 'org.projectlombok:lombok:1.18.12'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+        // declare gRPC dependencies
+        ['io.grpc:grpc-stub:1.21.0',
+         'io.grpc:grpc-netty:1.21.0',
+         'io.grpc:grpc-okhttp:1.21.0',
+         'io.grpc:grpc-protobuf:1.21.0',
+         'io.grpc:protoc-gen-grpc-java:1.21.0',
+         'com.google.protobuf:protoc:3.9.0'].each {
+            implementation it
+        }
+
+        ['org.projectlombok:lombok:1.18.12'].each {
+            compileOnly it
+            annotationProcessor it
+
+            testCompileOnly it
+            testAnnotationProcessor it
+        }
     }
 
     test {

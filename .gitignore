@@ -6,6 +6,7 @@ build/
 !**/src/test/**
 consul/
 vault/
+api-idl/src/generated
 
 ### STS ###
 .apt_generated

@@ -1,10 +1,10 @@
 package me.chat.test.api.services.validation;
 
+import me.chat.protoapi.ValidationTaskRequest;
+import me.chat.protoapi.ValidationTaskResponse;
 import me.chat.test.api.data.models.Task;
 import me.chat.test.api.services.task.TaskService;
 import me.chat.test.api.utils.RedisTopicHelper;
-import me.chat.common.models.ValidationTaskRequest;
-import me.chat.common.models.ValidationTaskResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +60,13 @@ public class ValidationServiceImpl implements ValidationService {
     private Mono<ValidationTaskResponse> requestValidation(Task task) {
         return rSocketRequester
             .route(rSocketValidationRoute)
-            .data(new ValidationTaskRequest())
+            .data(
+                ValidationTaskRequest
+                    .newBuilder()
+                    .setId(task.getId())
+                    .setName(task.getName())
+                    .build()
+            )
             .retrieveMono(ValidationTaskResponse.class);
     }
 

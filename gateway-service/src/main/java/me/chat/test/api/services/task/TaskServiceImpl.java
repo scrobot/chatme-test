@@ -1,10 +1,10 @@
 package me.chat.test.api.services.task;
 
+import me.chat.protoapi.ValidationStatus;
 import me.chat.test.api.controllers.models.CreateTaskDto;
 import me.chat.test.api.data.models.Task;
 import me.chat.test.api.data.TaskRepository;
 import me.chat.test.api.utils.RedisTopicHelper;
-import me.chat.common.models.ValidationStatus;
 import org.joda.time.DateTime;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;

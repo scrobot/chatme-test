@@ -1,8 +1,8 @@
 package me.chat.test.api.services.task;
 
+import me.chat.protoapi.ValidationStatus;
 import me.chat.test.api.controllers.models.CreateTaskDto;
 import me.chat.test.api.data.models.Task;
-import me.chat.common.models.ValidationStatus;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
