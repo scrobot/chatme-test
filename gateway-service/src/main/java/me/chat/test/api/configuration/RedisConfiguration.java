@@ -1,6 +1,6 @@
 package me.chat.test.api.configuration;
 
-import me.chat.test.api.data.Task;
+import me.chat.test.api.data.models.Task;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

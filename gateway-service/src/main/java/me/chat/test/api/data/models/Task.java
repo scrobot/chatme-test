@@ -1,8 +1,9 @@
-package me.chat.test.api.data;
+package me.chat.test.api.data.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -12,22 +13,28 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "tasks")
+@Accessors(chain = true)
+@Entity
+@Table(name = "tasks")
 public class Task implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
 
     @Column(name = "is_verified")
-    private boolean isVerified;
+    private boolean isVerified = false;
+
+    @Column(name = "status", nullable = true)
+    private String status;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private Date createdAt = DateTime.now().toDate();
 
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private Date updatedAt = DateTime.now().toDate();
 }

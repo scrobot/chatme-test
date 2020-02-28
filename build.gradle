@@ -15,9 +15,9 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id 'io.franzbecker.gradle-lombok' version '1.14'
     id "org.springframework.boot" version "2.2.4.RELEASE"
     id "io.spring.dependency-management" version "1.0.9.RELEASE"
+    id "io.freefair.lombok" version "5.0.0-rc4"
 }
 
 allprojects {
@@ -30,7 +30,7 @@ allprojects {
 
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'io.franzbecker.gradle-lombok'
+    apply plugin: 'io.freefair.lombok'
     apply plugin: 'io.spring.dependency-management'
 
     group = 'me.chat.test.validation'
@@ -38,11 +38,6 @@ allprojects {
 
     sourceCompatibility = '11'
     targetCompatibility = '11'
-
-    lombok {
-        version = "1.16.20"
-        sha256 = ""
-    }
 
     ext {
         set('springCloudVersion', "Hoxton.SR1")
@@ -68,31 +63,23 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-consul-config'
         implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
         implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
-        compileOnly 'org.projectlombok:lombok'
+
         runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-        annotationProcessor 'org.projectlombok:lombok'
+        runtimeOnly 'org.postgresql:postgresql:42.2.5'
+
+        compileOnly 'org.projectlombok:lombok:1.18.12'
+        annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-
         testImplementation 'io.projectreactor:reactor-test'
-
-        runtimeOnly 'org.postgresql:postgresql:42.2.5'
         testImplementation 'com.h2database:h2'
-
         testImplementation 'org.flywaydb:flyway-core'
-
-//        compile group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
-//        compile group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
-
-
-        testImplementation(
-                'org.junit.jupiter:junit-jupiter-api:5.1.0'
-        )
-        testRuntimeOnly(
-                'org.junit.jupiter:junit-jupiter-engine:5.1.0'
-        )
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+        testCompileOnly 'org.projectlombok:lombok:1.18.12'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     }
 
     test {
