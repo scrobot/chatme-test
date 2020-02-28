@@ -44,13 +44,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void markTaskAsVerified(long taskId, ValidationStatus status) {
         repository.findById(taskId)
-            .ifPresent(task -> {
-                repository.save(
-                    task.setVerified(true)
-                        .setUpdatedAt(DateTime.now().toDate())
-                        .setStatus(convertValidationStatus(status))
-                );
-            });
+            .ifPresent(task -> repository.save(
+                task.setVerified(true)
+                    .setUpdatedAt(DateTime.now().toDate())
+                    .setStatus(convertValidationStatus(status))
+            ));
     }
 
     private String convertValidationStatus(ValidationStatus status) {
