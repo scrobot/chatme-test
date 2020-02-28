@@ -1,6 +1,7 @@
 package me.chat.test.api.controllers;
 
 
+import lombok.AllArgsConstructor;
 import me.chat.test.api.controllers.models.CreateTaskDto;
 import me.chat.test.api.data.models.Task;
 import me.chat.test.api.services.task.TaskService;
@@ -9,15 +10,12 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("api/tasks")
 public class TaskController {
 
     private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
 
     @GetMapping("all")
     public Mono<List<Task>> getTasks() {

@@ -15,6 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Service
 public class ValidationServiceImpl implements ValidationService {
@@ -29,6 +30,9 @@ public class ValidationServiceImpl implements ValidationService {
     @Value("${rsocket.routes.validation}")
     private String rSocketValidationRoute;
 
+    @Value("${validation.interval}")
+    private Optional<Integer> validationInterval;
+
     public ValidationServiceImpl(TaskService taskService, ReactiveRedisTemplate<String, Task> redis, RSocketRequester rSocketRequester, RedisTopicHelper redisHelper) {
         this.taskService = taskService;
         this.redis = redis;
@@ -40,7 +44,7 @@ public class ValidationServiceImpl implements ValidationService {
     public void startValidationProcess() {
         logger.info("validation listener started");
 
-        Flux.interval(Duration.ofMillis(1000))
+        Flux.interval(Duration.ofMillis(validationInterval.orElse(1000)))
             .flatMap(i -> redis.keys(redisHelper.topicAllKeys()))
             .flatMap(redis.opsForValue()::get)
             .filter(it -> !it.isVerified())
@@ -65,7 +69,6 @@ public class ValidationServiceImpl implements ValidationService {
                     .newBuilder()
                     .setId(task.getId())
                     .setName(task.getName())
-                    .build()
             )
             .retrieveMono(ValidationTaskResponse.class);
     }

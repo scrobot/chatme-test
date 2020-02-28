@@ -1,5 +1,6 @@
 package me.chat.test.api.services.task;
 
+import lombok.AllArgsConstructor;
 import me.chat.protoapi.ValidationStatus;
 import me.chat.test.api.controllers.models.CreateTaskDto;
 import me.chat.test.api.data.models.Task;
@@ -13,18 +14,13 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
     private final ReactiveRedisTemplate<String, Task> redis;
     private final RedisTopicHelper redisTopicHelper;
-
-    public TaskServiceImpl(TaskRepository repository, ReactiveRedisTemplate<String, Task> redis, RedisTopicHelper redisTopicHelper) {
-        this.repository = repository;
-        this.redis = redis;
-        this.redisTopicHelper = redisTopicHelper;
-    }
 
     @Override
     public Mono<List<Task>> loadTasks() {

@@ -2,54 +2,35 @@ plugins {
     id 'com.google.protobuf'
 }
 
-dependencies {
-    implementation 'com.google.protobuf:protobuf-java'
-    implementation 'io.grpc:grpc-protobuf'
-}
-
-sourceSets {
-    main {
-        proto { srcDir 'src/main/proto' }
-    }
-}
-
 protobuf {
-    generatedFilesBaseDir = "${projectDir}/src/generated"
-
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.0.0'
+        artifact = 'com.google.protobuf:protoc:3.6.1'
     }
-
     plugins {
-        grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.22.1"
-        }
-        reactorGRpc {
-            artifact = "com.salesforce.servicelibs:reactor-grpc:0.10.0-RC1:jdk8@jar"
+        rsocketRpc {
+            artifact = 'io.rsocket.rpc:rsocket-rpc-protobuf:0.2.5'
         }
     }
-
     generateProtoTasks {
-        ofSourceSet('main')*.plugins {
-            grpc {}
-            reactorGRpc {}
+        all()*.plugins {
+            rsocketRpc {}
         }
     }
 }
 
+// If you use Intellij add this so it can find the generated classes
 idea {
     module {
         sourceDirs += file("src/main/proto")
         sourceDirs += file("src/generated/main/java")
-        sourceDirs += file("src/generated/main/grpc")
-        sourceDirs += file("src/generated/main/reactorGRpc")
+        sourceDirs += file("src/generated/main/rsocketRpc")
 
         generatedSourceDirs += file('src/generated/main/java')
-        generatedSourceDirs += file("src/generated/main/grpc")
-        generatedSourceDirs += file("src/generated/main/reactorGRpc")
+        generatedSourceDirs += file('src/generated/main/rsocketRpc')
     }
 }
 
+// clean generated code
 clean {
-    delete protobuf.generatedFilesBaseDir
+    delete 'src/generated/main'
 }

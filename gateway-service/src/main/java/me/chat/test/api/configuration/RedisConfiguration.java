@@ -1,5 +1,6 @@
 package me.chat.test.api.configuration;
 
+import lombok.val;
 import me.chat.test.api.data.models.Task;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,11 +27,10 @@ public class RedisConfiguration {
 
     @Bean
     public ReactiveRedisTemplate<String, Task> reactiveRedisTemplate(ReactiveRedisConnectionFactory factory) {
-        StringRedisSerializer keySerializer = new StringRedisSerializer();
-        var valueSerializer = new Jackson2JsonRedisSerializer<>(Task.class);
-        RedisSerializationContext.RedisSerializationContextBuilder<String, Task> builder =
-            RedisSerializationContext.newSerializationContext(keySerializer);
-        var context = builder.value(valueSerializer).build();
+        val keySerializer = new StringRedisSerializer();
+        val valueSerializer = new Jackson2JsonRedisSerializer<>(Task.class);
+        val builder = RedisSerializationContext.<String, Task>newSerializationContext(keySerializer);
+        val context = builder.value(valueSerializer).build();
 
         return new ReactiveRedisTemplate<>(factory, context);
     }

@@ -80,16 +80,6 @@ allprojects {
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
 
-        // declare gRPC dependencies
-        ['io.grpc:grpc-stub:1.21.0',
-         'io.grpc:grpc-netty:1.21.0',
-         'io.grpc:grpc-okhttp:1.21.0',
-         'io.grpc:grpc-protobuf:1.21.0',
-         'io.grpc:protoc-gen-grpc-java:1.21.0',
-         'com.google.protobuf:protoc:3.9.0'].each {
-            implementation it
-        }
-
         ['org.projectlombok:lombok:1.18.12'].each {
             compileOnly it
             annotationProcessor it

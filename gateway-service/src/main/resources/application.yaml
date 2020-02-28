@@ -31,6 +31,9 @@ spring:
     port: 6379
     topic-prefix: 'task-'
 
+validation:
+  interval: 1000
+
 rsocket:
   client:
     port: 7000
